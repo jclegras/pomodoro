@@ -24,15 +24,14 @@ cargo build --release
 
 ### Options
 
-| Option                | Description                        | Default   |
-|-----------------------|------------------------------------|-----------|
-| `-w`, `--work <mins>` | Set work duration in minutes       | 25        |
-| `-b`, `--break <mins>`| Set break duration in minutes      | 5         |
-| `-l`, `--long <mins>` | Set long break duration in minutes | 15        |
-| `-c`, `--cycles <n>`  | Number of Pomodoro cycles          | 4         |
-| `-n`, `--no-sound`     | Disable sound notifications       | false     |
-| `-h`, `--help`        | Show help message                  |           |
-
+| Option                       | Description                          | Default |
+|------------------------------|--------------------------------------|---------|
+| `-w`, `--work <mins>`        | Set work duration in minutes         | 25      |
+| `-s`, `--short-break <mins>` | Set break duration in minutes        | 5       |
+| `-l`, `--long-break <mins>`  | Set long break duration in minutes   | 15      |
+| `-c`, `--cycles <n>`         | Number of Pomodoro cycles            | 4       |
+| `-n`, `--no-sound`           | Disable sound notifications          | false   |
+| `-h`, `--help`               | Show help message                    |         |
 
 ### In-App Controls
 
@@ -69,4 +68,4 @@ Contributions are welcome! Please open issues or pull requests.
 
 ## License
 
-MIT License# pomodoro
+MIT License

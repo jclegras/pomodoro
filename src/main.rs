@@ -22,7 +22,7 @@ struct Config {
     long_break: u64,
     #[arg(short, long = "cycles", default_value_t = 4)]
     cycles: u64,
-    #[arg(long = "no-sound", default_value_t = false)]
+    #[arg(short, long = "no-sound", default_value_t = false)]
     no_sound: bool,
 }
 
@@ -176,7 +176,7 @@ fn run_break_timer(
 /// @param message The message to display in the notification.
 fn send_notification(message: &str) {
     Notification::new()
-        .summary("Rustodoro")
+        .summary("Pomodoro Timer")
         .body(message)
         .icon("dialog-information")
         .show()
@@ -203,7 +203,6 @@ fn main() {
     let skip = Arc::new(AtomicBool::new(false));
     let reset = Arc::new(AtomicBool::new(false));
 
-    // In main()
     let paused_clone = Arc::clone(&paused);
     let skip_clone = Arc::clone(&skip);
     let reset_clone = Arc::clone(&reset);
@@ -215,7 +214,7 @@ fn main() {
             // Poll for an event, waiting for up to 1 second
             if event::poll(Duration::from_secs(1)).unwrap() {
                 if let Event::Key(key) = event::read().unwrap() {
-                    // If the user presses 'r', set the reset flag
+                    // If the user presses 'r', set the reset flag and skip the current timer
                     if key.code == KeyCode::Char('r') {
                         reset_clone.store(true, Ordering::SeqCst);
                         skip_clone.store(true, Ordering::SeqCst);
@@ -224,7 +223,7 @@ fn main() {
                     if key.code == KeyCode::Char('s') {
                         skip_clone.store(true, Ordering::SeqCst);
                     }
-                    // If the user presses space, toggle the paused state
+                    // If the user presses space or 'p', toggle the paused state
                     if key.code == KeyCode::Char(' ') || key.code == KeyCode::Char('p') {
                         // fetch_xor is a thread-safe way to flip a boolean
                         paused_clone.fetch_xor(true, Ordering::SeqCst);
