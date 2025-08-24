@@ -1,10 +1,10 @@
-# Pomodoro
+# Rustodoro
 
-**Pomodoro** is a simple CLI Pomodoro timer written in Rust. Boost your productivity by working in focused intervals with scheduled breaks.
+**Rustodoro** is a simple CLI Pomodoro© timer written in Rust. Boost your productivity by working in focused intervals with scheduled breaks.
 
 ## Features
 
-- Start, pause, and reset Pomodoro sessions
+- Start, pause, and reset Pomodoro© sessions
 - Customizable work and break durations
 - Minimal, distraction-free terminal interface
 
@@ -12,14 +12,14 @@
 
 ```sh
 git clone https://github.com/jclegras/pomodoro.git
-cd rustodoro
+cd pomodoro
 cargo build --release
 ```
 
 ## Usage
 
 ```sh
-./pomodoro [OPTIONS]
+./rustodoro [OPTIONS]
 ```
 
 ### Options
@@ -44,16 +44,16 @@ While the app is running, you can use the following commands:
 
 ### Example
 
-Start a Pomodoro session with 50-minute work intervals and 10-minute breaks:
+Start a Pomodoro© session with 50-minute work intervals and 10-minute breaks:
 
 ```sh
-./pomodoro --work 50 --break 10
+./rustodoro --work 50 --break 10
 ```
 
 Start a session with custom durations and no sound notifications, running for 6 cycles:
 
 ```sh
-./pomodoro --work 40 --break 8 --long 20 --cycles 6 --no-sound
+./rustodoro --work 40 --short-break 8 --long-break 20 --cycles 6 --no-sound
 ```
 
 ## How It Works
