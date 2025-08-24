@@ -60,7 +60,9 @@ fn play_sound(sink: &rodio::Sink) {
 
 /// Run a Pomodoro timer.
 /// @param duration_mins The duration of the timer in minutes.
-/// @param message The message to display while the timer is running.
+/// @param work_type The type of work session (e.g., work, short break, long break).
+/// @param current_cycle The current cycle number.
+/// @param total_cycles The total number of cycles.
 /// @param sink The audio sink to use for playing sounds.
 /// @param paused A flag indicating whether the timer is paused.
 /// @param skip A flag indicating whether to skip the timer.
@@ -68,6 +70,8 @@ fn play_sound(sink: &rodio::Sink) {
 fn run_timer(
     duration_mins: u64,
     work_type: &SessionType,
+    current_cycle: u64,
+    total_cycles: u64,
     sink: &rodio::Sink,
     paused: &Arc<AtomicBool>,
     skip: &Arc<AtomicBool>,
@@ -75,7 +79,10 @@ fn run_timer(
 ) {
     let total_seconds = duration_mins * 60;
     let progress_bar = ProgressBar::new(total_seconds);
-    progress_bar.set_message(format!("{}", work_type));
+    progress_bar.set_message(format!(
+        "{} (#{}/{})",
+        work_type, current_cycle, total_cycles
+    ));
     progress_bar.set_style(
         indicatif::ProgressStyle::with_template(
             "{spinner:.green} [{elapsed_precise}] [{bar:40.cyan/blue}] {pos}/{len} ({eta}) < {msg} >",
@@ -155,6 +162,8 @@ fn run_break_timer(
         run_timer(
             short_break,
             &SessionType::ShortBreak("Break time"),
+            cycle,
+            total_cycles,
             sink,
             paused,
             skip,
@@ -164,6 +173,8 @@ fn run_break_timer(
         run_timer(
             long_break,
             &SessionType::LongBreak("Long break time"),
+            cycle,
+            total_cycles,
             sink,
             paused,
             skip,
@@ -272,6 +283,8 @@ fn main() {
             run_timer(
                 config.work_duration,
                 &SessionType::Work("Work session"),
+                current_cycle,
+                config.cycles,
                 &sink,
                 &paused,
                 &skip,
