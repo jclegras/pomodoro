@@ -37,9 +37,11 @@ cargo build --release
 
 While the app is running, you can use the following commands:
 
-- Press **`p`** or **Space** to pause or resume the timer.
+- Press **`p`** to pause the timer.
+- Press **Space** to pause or resume the timer.
+- Press **`r`** to resume if paused.
 - Press **`s`** to skip the current interval.
-- Press **`r`** to reset the Pomodoro cycle.
+- Press **`x`** to reset the Pomodoro cycle.
 - Press **Ctrl+C**, **Esc**, or **`q`** to quit at any time.
 
 ### Example
