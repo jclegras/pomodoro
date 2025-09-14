@@ -12,7 +12,6 @@ use crate::{AppError, types::Command};
 pub struct CommandDispatcher {
     tx: Sender<Command>,
     command_parser: CommandParser,
-    stopped: bool,
 }
 
 impl CommandDispatcher {
@@ -20,7 +19,6 @@ impl CommandDispatcher {
         CommandDispatcher {
             tx: tx,
             command_parser: CommandParser::new(),
-            stopped: false,
         }
     }
 
@@ -31,20 +29,16 @@ impl CommandDispatcher {
         terminal::enable_raw_mode().unwrap();
         loop {
             if event::poll(Duration::from_secs(1)).unwrap() {
-                if let event::Event::Key(mut key_event) = event::read().unwrap() {
+                if let event::Event::Key(key_event) = event::read().unwrap() {
                     if (key_event.modifiers == KeyModifiers::CONTROL
                         && (key_event.code == KeyCode::Char('c')))
                         || key_event.code == KeyCode::Char('q')
                         || key_event.code == KeyCode::Esc
                     {
-                        self.stopped = true;
-                        key_event.code = KeyCode::Char('s');
+                        break;
                     }
                     if let Some(cmd) = self.command_parser.get(&key_event) {
                         self.tx.send(cmd.clone()).map_err(AppError::ChannelSend)?;
-                    }
-                    if self.stopped {
-                        break;
                     }
                 }
             }
