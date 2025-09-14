@@ -12,9 +12,9 @@ use std::{
 };
 
 use clap::Parser;
-use crossterm::terminal;
 
 use command_dispatcher::CommandDispatcher;
+use crossterm::terminal;
 use session_timer::SessionTimer;
 use types::AppError;
 use types::SessionType;
@@ -50,11 +50,7 @@ fn main() {
         if config.no_sound { "off" } else { "on" }
     );
 
-    let command_dispatcher_thread = thread::spawn(move || {
-        CommandDispatcher::new(tx).run().unwrap_or_else(|_e| {
-            terminal::disable_raw_mode().unwrap();
-        })
-    });
+    let command_dispatcher_thread = thread::spawn(move || CommandDispatcher::new(tx).run());
 
     let mut total_work_cycles = 0;
 
@@ -69,9 +65,9 @@ fn main() {
                 config.no_sound,
             );
 
-            let consumer = thread::spawn(move || session_timer.run());
+            let session_timer_thread = thread::spawn(move || session_timer.run());
 
-            match consumer.join() {
+            match session_timer_thread.join() {
                 Ok(res) => {
                     if let Err(_) = res {
                         break 'controllerCycle;
@@ -105,9 +101,9 @@ fn main() {
                 config.no_sound,
             );
 
-            let consumer = thread::spawn(move || session_timer.run());
+            let session_timer_thread = thread::spawn(move || session_timer.run());
 
-            match consumer.join() {
+            match session_timer_thread.join() {
                 Ok(res) => {
                     if let Err(_) = res {
                         break 'controllerCycle;
@@ -127,7 +123,8 @@ fn main() {
     );
 
     // Wait for the command dispatcher to finish
-    command_dispatcher_thread.join().unwrap_or_else(|_| {
-        terminal::disable_raw_mode().unwrap();
-    })
+    match command_dispatcher_thread.join().unwrap() {
+        Ok(_) => (),
+        Err(_) => terminal::disable_raw_mode().unwrap(),
+    }
 }
